@@ -1,5 +1,6 @@
 import torch
 
+torch_generator = torch.Generator().manual_seed(123)
 
 def init_weights(layer):
     """
@@ -9,8 +10,8 @@ def init_weights(layer):
     layer_name = layer.__class__.__name__
     
     if layer_name.find('Linear') != -1:
-        # torch.nn.init.kaiming_uniform_(layer.weight, nonlinearity='relu')
-        torch.nn.init.xavier_uniform_(layer.weight) # This init is used in the ADAPTS example (TensorFlow default)
+        torch.nn.init.kaiming_uniform_(layer.weight, nonlinearity='relu', generator=torch_generator)
+        # torch.nn.init.xavier_uniform_(layer.weight) # This init is used in the ADAPTS example (TensorFlow default)
         layer.bias.data.fill_(0.01) # Init with small value such that ReLU is activated
     return
 
@@ -71,6 +72,7 @@ class Discriminator(torch.nn.Module):
         self.relu2 = torch.nn.ReLU()
         self.linear3 = torch.nn.Linear(10, 1, dtype=torch.float32)
         self.apply(init_weights)
+        self.sigmoid = torch.nn.Sigmoid()
         return
 
 
@@ -81,4 +83,5 @@ class Discriminator(torch.nn.Module):
         out = self.linear2(out)
         out = self.relu2(out)
         out = self.linear3(out)
+        out = self.sigmoid(out)
         return out

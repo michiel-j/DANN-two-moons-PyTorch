@@ -1,9 +1,9 @@
 # DANN-two-moons-PyTorch
-Demo for unsupervised domain adversarial neural network (DANN) using Two Moons synthetic dataset. Implemented in PyTorch, compared to [ADAPT Package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example for correctness. \
+Demo of an unsupervised domain adversarial neural network (DANN) using the Two Moons synthetic dataset. Implemented in PyTorch, compared to [ADAPT package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example to ensure correctness. \
 The hyperparameters were copied from the ADAPT demo. Therefore, they may be suboptimal.
 
 ## Dataset
-To be as close to the [ADAPT Package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example, I have copied the data creation to ensure the same data was used.
+To ensure identical data as used in the [ADAPT Package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example, I have copied the data creation function (`make_moons_da()` in `utils.py`) to ensure the same data was used. \
 Additionally, I have added an independent test set, on which no model weights were fitted. The code to create the dataset can be found in `utils.py`.
 
 Visualisation of the Two Moons training data:
@@ -13,11 +13,12 @@ Visualisation of the Two Moons training data:
 
 
 ## Model
-The encoder and classifier were copied from [ADAPT demo (GitHub)](https://adapt-python.github.io/adapt/examples/Two_moons.html#Network). The discriminator is copied from the default as mentioned in [ADAPT DANN docs](https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html). The definitions of encoder, classifier and discriminator can be found in `models.py`.
+The encoder and classifier were copied from the [ADAPT example](https://adapt-python.github.io/adapt/examples/Two_moons.html#Network). The discriminator is ADAPT's default and was copied from the [ADAPT DANN docs](https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html). The definitions of encoder, classifier and discriminator can be found in `models.py`.
 
 ## Results
 ### No domain adaptation
 First, only the encoder and the classifier are trained. No domain adaptation is applied.
+
 Visualisation of the network without domain adaptation:
 <p align="center">
   <img width="500" src=./plots/contour_plot_no_domain_adaptation.png>
@@ -26,11 +27,12 @@ Visualisation of the network without domain adaptation:
 The corresponding results on the test set data are (`log.txt`):
 ```
 Source domain test data: avg loss = 0.000000, avg acc = 100.000000%, ARI = 1.0000
-Target domain test data: avg loss = 25.000000, avg acc = 88.000000%, ARI = 0.5734
+Target domain test data: avg loss = 18.750000, avg acc = 85.000000%, ARI = 0.4849
 ```
 
 ### With domain adaptation
-Next, the encoder, the classifier and the discriminator (domain classifier) are trained. Domain adaptation is applied.
+Next, the encoder, the classifier and the discriminator (domain classifier) were trained. Domain adaptation was applied.
+
 Visualisation of the network with domain adaptation:
 <p align="center">
   <img width="500" src=./plots/contour_plot_with_domain_adaptation.png>
@@ -38,18 +40,18 @@ Visualisation of the network with domain adaptation:
 
 The corresponding results on the test set data are (`log.txt`):
 ```
-Source domain test data: avg loss = 0.000000, avg acc = 91.000000%, ARI = 0.6691
-Target domain test data: avg loss = 0.000000, avg acc = 96.000000%, ARI = 0.8449
+Source domain test data: avg loss = 0.000000, avg acc = 99.000000%, ARI = 0.9600
+Target domain test data: avg loss = 3.125000, avg acc = 95.000000%, ARI = 0.8081
 ```
 The hyperparameters were copied from the ADAPT demo. Therefore, they may be suboptimal.
 
 ## Reproducibility
-The minimal list of required packages can be found in `requirements.txt`. All code was tested in Python 3.12 with PyTorch 2.4.1. \
+The minimal list of required packages can be found in `requirements.txt`. All code was tested in Python 3.11 and 3.12 with PyTorch 2.6.0 and 2.4.1 resp. \
 Random seeds are set to ensure reproducibility. These can be found in `params.py`.
 
 ## References
-I have mainly based this repository on the ADAPT package (TensorFlow only), and have drawn some inspiration (plotting, file structure) from mashaan14's DANN toy example:
-- *Awesome Domain Adaptation in TensorFlow* (ADAPT): [https://adapt-python.github.io/adapt/index.html](https://adapt-python.github.io/adapt/index.html)
+This repository is mainly based on the ADAPT package (TensorFlow only), and some ideas (plotting, file structure) originated when looking at mashaan14's DANN toy example:
+- *Awesome Domain Adaptation in Python Toolbox* (ADAPT): [https://adapt-python.github.io/adapt/index.html](https://adapt-python.github.io/adapt/index.html)
 - *DANN-toy* repository from mashaan14: [https://github.com/mashaan14/DANN-toy](https://github.com/mashaan14/DANN-toy)
 
 More information about the unsupervised DANN can be found in the following article:

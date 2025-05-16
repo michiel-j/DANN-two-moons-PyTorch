@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 import numpy as np
-# import matplotlib.pyplot as plt
 from sklearn.metrics.cluster import adjusted_rand_score
 from sklearn.metrics import accuracy_score
 
@@ -34,7 +33,7 @@ def train_src(encoder, classifier, src_data_loader):
             features_src = encoder(X_batch)
 
             # Predict source samples on classifier
-            y_pred_batch = classifier(features_src) # y_pred_batch_logits
+            y_pred_batch = classifier(features_src)
 
             # Compute training loss
             loss = criterion(input=y_pred_batch.squeeze(), target=y_true_batch)
@@ -76,7 +75,7 @@ def eval(encoder, classifier, src_data_loader, print_output: bool = True):
         features_src = encoder(X_batch)
 
         # Predict source samples on classifier
-        y_pred_batch = classifier(features_src).squeeze() # y_pred_batch_logits
+        y_pred_batch = classifier(features_src).squeeze()
         y_pred_batch = torch.where(y_pred_batch >= 0.5, 1, 0).to(dtype=torch.float32)
 
         # Compute training loss
@@ -93,11 +92,12 @@ def eval(encoder, classifier, src_data_loader, print_output: bool = True):
 
 def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_loader):
     """
-    Train encoder and classifier using source domain data
+    Train encoder and classifier using source domain data.
+    
+    In the ADAPT Two Moons example, a gamma factor is given for speedup. This gamma factor
+    is used in the calculation of lambda (see ADAPT's UpdateLambda callback). I have copied
+    the formula from the unsupervised DANN paper by Ganin et al.
     """
-    # Assume lambda_ 1.0 (ADAPT's default)
-    lambda_ = params.domain_adaptation_lambda
-
     classifier_losses_across_epochs = []
 
     encoder.train()
@@ -112,29 +112,36 @@ def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_
         betas=(params.beta1, params.beta2),
         weight_decay=params.weight_decay
     )
-    criterion_classifier = nn.BCEWithLogitsLoss()
+    criterion_classifier = nn.BCELoss()
 
     for epoch in range(params.num_epochs):
         classifier_losses_within_epoch = []
 
         # Source domain data
-        # for idx, (X_batch, y_true_batch) in enumerate(src_data_loader):
         for step, ((X_batch_src, y_true_batch_src), (X_batch_tgt, _)) in enumerate(zip(src_data_loader, tgt_data_loader)):
+            # Get the value for lambda, which will be used to weight the discriminator loss term in the encoder loss calculation
+            lambda_ = utils.get_lambda_value_domain_adaptation(
+                current_step=step,
+                current_epoch=epoch,
+                num_epochs=params.num_epochs,
+                len_dataloader=len(src_data_loader)
+            )
+
             # Source domain data
             features_src = encoder(X_batch_src) # Extract features using encoder network
             y_pred_batch = classifier(features_src) # Predict source samples on classifier
             classifier_loss = criterion_classifier(input=y_pred_batch.squeeze(), target=y_true_batch_src) # Compute classifier's training loss
             classifier_losses_within_epoch.append(classifier_loss.item())
-            discriminator_logits_src = discriminator(features_src)
+            discriminator_pred_src = discriminator(features_src) # Domain predictions
 
             # Target domain data
             features_tgt = encoder(X_batch_tgt) # Extract features using encoder network
-            discriminator_logits_tgt = discriminator(features_tgt)
+            discriminator_pred_tgt = discriminator(features_tgt) # Domain prediction
 
             # Compute discriminator loss
-            discriminator_loss = torch.mean(-torch.log(torch.nn.functional.sigmoid(discriminator_logits_src) + torch.finfo(torch.float32).eps) - torch.log(1 - torch.nn.functional.sigmoid(discriminator_logits_tgt) + torch.finfo(torch.float32).eps)) # Compute discriminator's training loss
+            discriminator_loss = torch.mean(-torch.log(discriminator_pred_src + torch.finfo(torch.float32).eps) - torch.log(1 - discriminator_pred_tgt + torch.finfo(torch.float32).eps)) # Compute discriminator's training loss
 
-            # Compute encoder loss, assume lambda_ = 0.1 (ADAPT's default)
+            # Compute encoder loss, assume lambda_ = 1.0 (ADAPT's value in two moons example)
             encoder_loss = classifier_loss - lambda_ * discriminator_loss
 
             # Backpropagation

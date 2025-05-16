@@ -57,3 +57,13 @@ def make_moons_da(n_samples=100, rotation=30, noise=0.05, random_state=0):
     Xt = Xs.dot(rot_matrix)
     yt = ys
     return Xs, ys, Xt, yt
+
+
+def get_lambda_value_domain_adaptation(current_step: int, current_epoch: int, num_epochs: int, len_dataloader: int):
+    """
+    Calculate the lambda factor for domain adaptation, which evolves from 0 (beginning of training) to 1 (end of training).
+    More information can be found in the unsupervised DANN paper by Ganin et al.
+    """
+    p = float(current_step + current_epoch * len_dataloader) / num_epochs / len_dataloader
+    lambda_ = 2. / (1. + np.exp(-10 * p)) - 1
+    return lambda_

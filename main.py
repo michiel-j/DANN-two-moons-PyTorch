@@ -12,7 +12,7 @@ import params
 """
 Demo copied from ADAPT package (TensorFlow only): https://adapt-python.github.io/adapt/examples/Two_moons.html
 
-Partly inspired by https://github.com/mashaan14/DANN-toy
+Partly inspired by https://github.com/mashaan14/DANN-toy (file structure, plotting)
 """
 
 def main():
@@ -83,9 +83,9 @@ def main():
 
     # Evaluate encoder and classifier using source domain data and target domain data
     print("Evaluation using src data (trained with only src data):")
-    test_predictions_Xs, test_true_Xs = core.eval(encoder, classifier, Xs_loader_test)
+    test_predictions_Xs_no_da, test_true_Xs_no_da = core.eval(encoder, classifier, Xs_loader_test)
     print("Evaluation using tgt data (trained with only src data):")
-    test_predictions_Xt, test_true_Xt = core.eval(encoder, classifier, Xt_loader_test)
+    test_predictions_Xt_no_da, test_true_Xt_no_da = core.eval(encoder, classifier, Xt_loader_test)
 
     # Create contour plot
     y_pred_grid, _ = core.eval(encoder, classifier, X_loader_grid, print_output=False) # print=False because this will give gibberish output
@@ -110,9 +110,9 @@ def main():
 
     # Evaluate encoder and classifier
     print("Evaluation using src data (trained with both src and tgt data):")
-    core.eval(encoder, classifier, Xs_loader_test)
+    test_predictions_Xs_with_da, test_true_Xs_with_da = core.eval(encoder, classifier, Xs_loader_test)
     print("Evaluation using tgt data (trained with both src and tgt data):")
-    core.eval(encoder, classifier, Xt_loader_test)
+    test_predictions_Xt_with_da, test_true_Xt_with_da =core.eval(encoder, classifier, Xt_loader_test)
 
     # Create contour plot
     y_pred_grid, _ = core.eval(encoder, classifier, X_loader_grid, print_output=False) # print=False because this will give gibberish output

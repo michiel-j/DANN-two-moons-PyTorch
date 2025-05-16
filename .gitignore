@@ -175,4 +175,4 @@ cython_debug/
 
 # Custom (not in GitHub template)
 .DS_Store
-.vscode
+.vscode/
