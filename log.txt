@@ -85,87 +85,87 @@ Evaluation using src data (trained with only src data):
 Evaluation using tgt data (trained with only src data):
 	 avg loss = 18.750000, avg acc = 85.000000%, ARI = 0.4849
 Train encoder and classifier using unsupervised DANN for 800 epochs
-Epoch 0 of 800: train loss is 0.668494
-Epoch 10 of 800: train loss is 0.570980
-Epoch 20 of 800: train loss is 0.492154
-Epoch 30 of 800: train loss is 0.427383
-Epoch 40 of 800: train loss is 0.376239
-Epoch 50 of 800: train loss is 0.341186
-Epoch 60 of 800: train loss is 0.314219
-Epoch 70 of 800: train loss is 0.291102
-Epoch 80 of 800: train loss is 0.274874
-Epoch 90 of 800: train loss is 0.261213
-Epoch 100 of 800: train loss is 0.251475
-Epoch 110 of 800: train loss is 0.240613
-Epoch 120 of 800: train loss is 0.227644
-Epoch 130 of 800: train loss is 0.215486
-Epoch 140 of 800: train loss is 0.200768
-Epoch 150 of 800: train loss is 0.180739
-Epoch 160 of 800: train loss is 0.168943
-Epoch 170 of 800: train loss is 0.158749
-Epoch 180 of 800: train loss is 0.151554
-Epoch 190 of 800: train loss is 0.142000
-Epoch 200 of 800: train loss is 0.135438
-Epoch 210 of 800: train loss is 0.125020
-Epoch 220 of 800: train loss is 0.115781
-Epoch 230 of 800: train loss is 0.108747
-Epoch 240 of 800: train loss is 0.103539
-Epoch 250 of 800: train loss is 0.101614
-Epoch 260 of 800: train loss is 0.099553
-Epoch 270 of 800: train loss is 0.097948
-Epoch 280 of 800: train loss is 0.092050
-Epoch 290 of 800: train loss is 0.090188
-Epoch 300 of 800: train loss is 0.089525
-Epoch 310 of 800: train loss is 0.087909
-Epoch 320 of 800: train loss is 0.078664
-Epoch 330 of 800: train loss is 0.074727
-Epoch 340 of 800: train loss is 0.072743
-Epoch 350 of 800: train loss is 0.072191
-Epoch 360 of 800: train loss is 0.074589
-Epoch 370 of 800: train loss is 0.075081
-Epoch 380 of 800: train loss is 0.078885
-Epoch 390 of 800: train loss is 0.080446
-Epoch 400 of 800: train loss is 0.082205
-Epoch 410 of 800: train loss is 0.084487
-Epoch 420 of 800: train loss is 0.081214
-Epoch 430 of 800: train loss is 0.076650
-Epoch 440 of 800: train loss is 0.074054
-Epoch 450 of 800: train loss is 0.070094
-Epoch 460 of 800: train loss is 0.066365
-Epoch 470 of 800: train loss is 0.061049
-Epoch 480 of 800: train loss is 0.057855
-Epoch 490 of 800: train loss is 0.059774
-Epoch 500 of 800: train loss is 0.060571
-Epoch 510 of 800: train loss is 0.063594
-Epoch 520 of 800: train loss is 0.061969
-Epoch 530 of 800: train loss is 0.056986
-Epoch 540 of 800: train loss is 0.051811
-Epoch 550 of 800: train loss is 0.050572
-Epoch 560 of 800: train loss is 0.053839
-Epoch 570 of 800: train loss is 0.054008
-Epoch 580 of 800: train loss is 0.050317
-Epoch 590 of 800: train loss is 0.049494
-Epoch 600 of 800: train loss is 0.048578
-Epoch 610 of 800: train loss is 0.046930
-Epoch 620 of 800: train loss is 0.046438
-Epoch 630 of 800: train loss is 0.045558
-Epoch 640 of 800: train loss is 0.042821
-Epoch 650 of 800: train loss is 0.039474
-Epoch 660 of 800: train loss is 0.038747
-Epoch 670 of 800: train loss is 0.038238
-Epoch 680 of 800: train loss is 0.038934
-Epoch 690 of 800: train loss is 0.039217
-Epoch 700 of 800: train loss is 0.039050
-Epoch 710 of 800: train loss is 0.037869
-Epoch 720 of 800: train loss is 0.037078
-Epoch 730 of 800: train loss is 0.035593
-Epoch 740 of 800: train loss is 0.033606
-Epoch 750 of 800: train loss is 0.033499
-Epoch 760 of 800: train loss is 0.031978
-Epoch 770 of 800: train loss is 0.031528
-Epoch 780 of 800: train loss is 0.032181
-Epoch 790 of 800: train loss is 0.032597
+Epoch 0 of 800: train loss is 0.668522 (lambda is 0.0042)
+Epoch 10 of 800: train loss is 0.571075 (lambda is 0.0666)
+Epoch 20 of 800: train loss is 0.491557 (lambda is 0.1285)
+Epoch 30 of 800: train loss is 0.425548 (lambda is 0.1894)
+Epoch 40 of 800: train loss is 0.376529 (lambda is 0.2488)
+Epoch 50 of 800: train loss is 0.339249 (lambda is 0.3065)
+Epoch 60 of 800: train loss is 0.312027 (lambda is 0.3620)
+Epoch 70 of 800: train loss is 0.292505 (lambda is 0.4150)
+Epoch 80 of 800: train loss is 0.274343 (lambda is 0.4654)
+Epoch 90 of 800: train loss is 0.263511 (lambda is 0.5129)
+Epoch 100 of 800: train loss is 0.249522 (lambda is 0.5575)
+Epoch 110 of 800: train loss is 0.226677 (lambda is 0.5991)
+Epoch 120 of 800: train loss is 0.207994 (lambda is 0.6376)
+Epoch 130 of 800: train loss is 0.194495 (lambda is 0.6733)
+Epoch 140 of 800: train loss is 0.186584 (lambda is 0.7060)
+Epoch 150 of 800: train loss is 0.178395 (lambda is 0.7360)
+Epoch 160 of 800: train loss is 0.172502 (lambda is 0.7633)
+Epoch 170 of 800: train loss is 0.165111 (lambda is 0.7882)
+Epoch 180 of 800: train loss is 0.159161 (lambda is 0.8107)
+Epoch 190 of 800: train loss is 0.152146 (lambda is 0.8311)
+Epoch 200 of 800: train loss is 0.145891 (lambda is 0.8494)
+Epoch 210 of 800: train loss is 0.140918 (lambda is 0.8660)
+Epoch 220 of 800: train loss is 0.131557 (lambda is 0.8808)
+Epoch 230 of 800: train loss is 0.128677 (lambda is 0.8940)
+Epoch 240 of 800: train loss is 0.121674 (lambda is 0.9059)
+Epoch 250 of 800: train loss is 0.114199 (lambda is 0.9165)
+Epoch 260 of 800: train loss is 0.109250 (lambda is 0.9259)
+Epoch 270 of 800: train loss is 0.104282 (lambda is 0.9344)
+Epoch 280 of 800: train loss is 0.099047 (lambda is 0.9418)
+Epoch 290 of 800: train loss is 0.097088 (lambda is 0.9485)
+Epoch 300 of 800: train loss is 0.095023 (lambda is 0.9544)
+Epoch 310 of 800: train loss is 0.090819 (lambda is 0.9597)
+Epoch 320 of 800: train loss is 0.088576 (lambda is 0.9643)
+Epoch 330 of 800: train loss is 0.086601 (lambda is 0.9684)
+Epoch 340 of 800: train loss is 0.085326 (lambda is 0.9721)
+Epoch 350 of 800: train loss is 0.082520 (lambda is 0.9753)
+Epoch 360 of 800: train loss is 0.081195 (lambda is 0.9782)
+Epoch 370 of 800: train loss is 0.076803 (lambda is 0.9807)
+Epoch 380 of 800: train loss is 0.075918 (lambda is 0.9830)
+Epoch 390 of 800: train loss is 0.076825 (lambda is 0.9850)
+Epoch 400 of 800: train loss is 0.079719 (lambda is 0.9867)
+Epoch 410 of 800: train loss is 0.081821 (lambda is 0.9883)
+Epoch 420 of 800: train loss is 0.082515 (lambda is 0.9896)
+Epoch 430 of 800: train loss is 0.078633 (lambda is 0.9909)
+Epoch 440 of 800: train loss is 0.071509 (lambda is 0.9919)
+Epoch 450 of 800: train loss is 0.068035 (lambda is 0.9929)
+Epoch 460 of 800: train loss is 0.064869 (lambda is 0.9937)
+Epoch 470 of 800: train loss is 0.064142 (lambda is 0.9944)
+Epoch 480 of 800: train loss is 0.060184 (lambda is 0.9951)
+Epoch 490 of 800: train loss is 0.060399 (lambda is 0.9957)
+Epoch 500 of 800: train loss is 0.058340 (lambda is 0.9962)
+Epoch 510 of 800: train loss is 0.057427 (lambda is 0.9966)
+Epoch 520 of 800: train loss is 0.054081 (lambda is 0.9970)
+Epoch 530 of 800: train loss is 0.051495 (lambda is 0.9974)
+Epoch 540 of 800: train loss is 0.049638 (lambda is 0.9977)
+Epoch 550 of 800: train loss is 0.046901 (lambda is 0.9980)
+Epoch 560 of 800: train loss is 0.044476 (lambda is 0.9982)
+Epoch 570 of 800: train loss is 0.041642 (lambda is 0.9984)
+Epoch 580 of 800: train loss is 0.040135 (lambda is 0.9986)
+Epoch 590 of 800: train loss is 0.044982 (lambda is 0.9988)
+Epoch 600 of 800: train loss is 0.065579 (lambda is 0.9989)
+Epoch 610 of 800: train loss is 0.064327 (lambda is 0.9990)
+Epoch 620 of 800: train loss is 0.059605 (lambda is 0.9991)
+Epoch 630 of 800: train loss is 0.057575 (lambda is 0.9992)
+Epoch 640 of 800: train loss is 0.057721 (lambda is 0.9993)
+Epoch 650 of 800: train loss is 0.054705 (lambda is 0.9994)
+Epoch 660 of 800: train loss is 0.056304 (lambda is 0.9995)
+Epoch 670 of 800: train loss is 0.056175 (lambda is 0.9995)
+Epoch 680 of 800: train loss is 0.053534 (lambda is 0.9996)
+Epoch 690 of 800: train loss is 0.058787 (lambda is 0.9996)
+Epoch 700 of 800: train loss is 0.074667 (lambda is 0.9997)
+Epoch 710 of 800: train loss is 0.068603 (lambda is 0.9997)
+Epoch 720 of 800: train loss is 0.062332 (lambda is 0.9998)
+Epoch 730 of 800: train loss is 0.060068 (lambda is 0.9998)
+Epoch 740 of 800: train loss is 0.057432 (lambda is 0.9998)
+Epoch 750 of 800: train loss is 0.054990 (lambda is 0.9998)
+Epoch 760 of 800: train loss is 0.057323 (lambda is 0.9999)
+Epoch 770 of 800: train loss is 0.061196 (lambda is 0.9999)
+Epoch 780 of 800: train loss is 0.061590 (lambda is 0.9999)
+Epoch 790 of 800: train loss is 0.053885 (lambda is 0.9999)
 Evaluation using src data (trained with both src and tgt data):
-	 avg loss = 0.000000, avg acc = 99.000000%, ARI = 0.9600
+	 avg loss = 0.000000, avg acc = 98.000000%, ARI = 0.9208
 Evaluation using tgt data (trained with both src and tgt data):
-	 avg loss = 3.125000, avg acc = 95.000000%, ARI = 0.8081
+	 avg loss = 12.500000, avg acc = 93.000000%, ARI = 0.7370

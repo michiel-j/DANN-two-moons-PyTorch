@@ -1,6 +1,6 @@
 # DANN-two-moons-PyTorch
 Demo of an unsupervised domain adversarial neural network (DANN) using the Two Moons synthetic dataset. Implemented in PyTorch, compared to [ADAPT package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example to ensure correctness. \
-The hyperparameters were copied from the ADAPT demo. Therefore, they may be suboptimal.
+The hyperparameters were copied from the ADAPT demo. Therefore, these may be suboptimal.
 
 ## Dataset
 To ensure identical data as used in the [ADAPT Package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example, I have copied the data creation function (`make_moons_da()` in `utils.py`) to ensure the same data was used. \
@@ -30,6 +30,11 @@ Source domain test data: avg loss = 0.000000, avg acc = 100.000000%, ARI = 1.000
 Target domain test data: avg loss = 18.750000, avg acc = 85.000000%, ARI = 0.4849
 ```
 
+Visualisation of the feature extractor's latent space (encoder) without domain adaptation (through PCA):
+<p align="center">
+  <img width="500" src=./plots/pca_encoder_no-domain-adaptation.png>
+</p>
+
 ### With domain adaptation
 Next, the encoder, the classifier and the discriminator (domain classifier) were trained. Domain adaptation was applied.
 
@@ -40,10 +45,15 @@ Visualisation of the network with domain adaptation:
 
 The corresponding results on the test set data are (`log.txt`):
 ```
-Source domain test data: avg loss = 0.000000, avg acc = 99.000000%, ARI = 0.9600
-Target domain test data: avg loss = 3.125000, avg acc = 95.000000%, ARI = 0.8081
+Source domain test data: avg loss = 0.000000, avg acc = 98.000000%, ARI = 0.9208
+Target domain test data: avg loss = 12.500000, avg acc = 93.000000%, ARI = 0.7370
 ```
-The hyperparameters were copied from the ADAPT demo. Therefore, they may be suboptimal.
+The hyperparameters were copied from the ADAPT demo. Therefore, these may be suboptimal.
+
+Visualisation of the feature extractor's latent space (encoder) with domain adaptation (through PCA):
+<p align="center">
+  <img width="500" src=./plots/pca_encoder_with-domain-adaptation.png>
+</p>
 
 ## Reproducibility
 The minimal list of required packages can be found in `requirements.txt`. All code was tested in Python 3.11 and 3.12 with PyTorch 2.6.0 and 2.4.1 resp. \

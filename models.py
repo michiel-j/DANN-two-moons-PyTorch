@@ -1,6 +1,7 @@
 import torch
+import params
 
-torch_generator = torch.Generator().manual_seed(123)
+torch_generator = torch.Generator(device='cpu').manual_seed(params.manual_seed_weight_init)
 
 def init_weights(layer):
     """
