@@ -22,14 +22,15 @@ def main():
     In a second phase, train encoder and classifier from their respective state.
     Use unsupervised DANN with a discriminator initialised from scratch. 
     """
-    # Set random seeds for reproducibility
+    # Set random seeds for reproducibility (disabled CUDA settings since all is done on CPU)
     print(f"Random seed is {params.manual_seed}")
     random.seed(params.manual_seed)
     np.random.seed(params.manual_seed)
     torch.manual_seed(params.manual_seed)
-    torch.cuda.manual_seed(params.manual_seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = True
+    torch.use_deterministic_algorithms(True)
+    # torch.cuda.manual_seed(params.manual_seed)
+    # torch.backends.cudnn.deterministic = True
+    # torch.backends.cudnn.benchmark = True
 
     # Create source and target domain data
     # Assume 100 train samples and 100 test samples
@@ -93,6 +94,8 @@ def main():
     plt = utils.plot_contour(Xs, Xt, ys, x_coord_grid, y_coord_grid, y_pred_grid)
     plt.savefig('./plots/contour_plot_no_domain_adaptation.png')
 
+    # Plot encoder's latent space through PCA
+    core.pca_plots(encoder, Xs_loader_train, Xt_loader_train, './plots/pca_encoder_no-domain-adaptation.png')
 
     #########################################################################################################
     #  Train encoder, classifier and discriminator using source and target domain data (unsupervised DANN)
@@ -112,13 +115,16 @@ def main():
     print("Evaluation using src data (trained with both src and tgt data):")
     test_predictions_Xs_with_da, test_true_Xs_with_da = core.eval(encoder, classifier, Xs_loader_test)
     print("Evaluation using tgt data (trained with both src and tgt data):")
-    test_predictions_Xt_with_da, test_true_Xt_with_da =core.eval(encoder, classifier, Xt_loader_test)
+    test_predictions_Xt_with_da, test_true_Xt_with_da = core.eval(encoder, classifier, Xt_loader_test)
 
     # Create contour plot
     y_pred_grid, _ = core.eval(encoder, classifier, X_loader_grid, print_output=False) # print=False because this will give gibberish output
     y_pred_grid = np.array(y_pred_grid).reshape(100, 100) # Reshape back from separate 2 coordinate points to mesh/grid
     plt = utils.plot_contour(Xs, Xt, ys, x_coord_grid, y_coord_grid, y_pred_grid)
     plt.savefig('./plots/contour_plot_with_domain_adaptation.png')
+
+    # Plot encoder's latent space through PCA
+    core.pca_plots(encoder, Xs_loader_train, Xt_loader_train, './plots/pca_encoder_with-domain-adaptation.png')
     
     return
 

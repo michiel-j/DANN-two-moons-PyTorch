@@ -3,6 +3,8 @@ from torch import nn
 import numpy as np
 from sklearn.metrics.cluster import adjusted_rand_score
 from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
+from matplotlib import pyplot as plt
 
 import params
 import utils
@@ -58,7 +60,7 @@ def train_src(encoder, classifier, src_data_loader):
     return encoder, classifier
 
 
-def eval(encoder, classifier, src_data_loader, print_output: bool = True):
+def eval(encoder, classifier, data_loader, print_output: bool = True):
     """
     Evaluate encoder and classifier using source domain data
     """
@@ -70,20 +72,21 @@ def eval(encoder, classifier, src_data_loader, print_output: bool = True):
     criterion = nn.BCELoss()
 
     # Evaluate network
-    for idx, (X_batch, y_true_batch) in enumerate(src_data_loader):
-        # Extract features using encoder network
-        features_src = encoder(X_batch)
+    with torch.no_grad():
+        for idx, (X_batch, y_true_batch) in enumerate(data_loader):
+            # Extract features using encoder network
+            features = encoder(X_batch)
 
-        # Predict source samples on classifier
-        y_pred_batch = classifier(features_src).squeeze()
-        y_pred_batch = torch.where(y_pred_batch >= 0.5, 1, 0).to(dtype=torch.float32)
+            # Predict source samples on classifier
+            y_pred_batch = classifier(features).squeeze()
+            y_pred_batch = torch.where(y_pred_batch >= 0.5, 1, 0).to(dtype=torch.float32)
 
-        # Compute training loss
-        loss = criterion(input=y_pred_batch, target=y_true_batch)
-        losses.append(loss.item())
+            # Compute training loss
+            loss = criterion(input=y_pred_batch, target=y_true_batch)
+            losses.append(loss.item())
 
-        true_labels.extend(y_true_batch.tolist())
-        predicted_labels.extend(y_pred_batch.tolist())
+            true_labels.extend(y_true_batch.tolist())
+            predicted_labels.extend(y_pred_batch.tolist())
 
     if print_output:
         print(f"\t avg loss = {loss:.6f}, avg acc = {accuracy_score(y_true=true_labels, y_pred=predicted_labels):2%}, ARI = {adjusted_rand_score(labels_true=true_labels, labels_pred=predicted_labels):.4f}")
@@ -155,7 +158,7 @@ def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_
         
         # Print metrics for this epoch
         if epoch % 10 == 0:
-            print(f'Epoch {epoch} of {params.num_epochs}: train loss is {classifier_losses_across_epochs[-1]:.6f}')
+            print(f'Epoch {epoch} of {params.num_epochs}: train loss is {classifier_losses_across_epochs[-1]:.6f} (lambda is {lambda_:.4f})')
 
     # Plot training loss curve
     plt = utils.plot_loss_curve(classifier_losses_across_epochs)
@@ -163,3 +166,48 @@ def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_
     plt.close()
 
     return encoder, classifier, discriminator
+
+
+def pca_plots(encoder, src_data_loader, tgt_data_loader, file: str):
+    """
+    
+    """
+    encoder.eval()
+    features_src_list, features_tgt_list = [], []
+    labels_src_list = []
+
+    with torch.no_grad():
+        for idx, (X_batch, y_batch) in enumerate(src_data_loader):
+            # Extract features using encoder network
+            features_src = encoder(X_batch)
+            features_src_list.append(features_src.detach().cpu())
+            labels_src_list.append(y_batch.detach().cpu())
+
+        for idx, (X_batch, _) in enumerate(tgt_data_loader):
+            # Extract features using encoder network
+            features_tgt = encoder(X_batch)
+            features_tgt_list.append(features_tgt.detach().cpu())
+    
+    # Convert features from list to torch.Tensor by stacking
+    features_src = torch.cat(features_src_list, dim=0).numpy()
+    features_tgt = torch.cat(features_tgt_list, dim=0).numpy()
+    labels_src = torch.cat(labels_src_list, dim=0).numpy()
+
+    # Fit and transform the features using PCA
+    pca_transformer = PCA(n_components=2).fit(np.concatenate((features_src, features_tgt), axis=0))
+    features_src = pca_transformer.transform(features_src)
+    features_tgt = pca_transformer.transform(features_tgt)
+
+    # Plot the PCA
+    plt.figure()
+    plt.scatter(features_src[labels_src==0][:, 0], features_src[labels_src==0][:, 1], color='blue', s=3)
+    plt.scatter(features_src[labels_src==1][:, 0], features_src[labels_src==1][:, 1], color='orange', s=3)
+    plt.scatter(features_tgt[:, 0], features_tgt[:, 1], color='black', s=3)
+    plt.xlabel('Latent dim. 1')
+    plt.ylabel('Latent dim. 2')
+    plt.title(f"PCA of encoder's latent space. \n Expl. variance is {(pca_transformer.explained_variance_ratio_[0]*100):.2f}% (dim. 1) and {(pca_transformer.explained_variance_ratio_[1]*100):.2f}% (dim. 2).")
+    plt.legend(['source, 0', 'source, 1', 'target'])
+    plt.tight_layout()
+    plt.savefig(file)
+    plt.close()
+    return
