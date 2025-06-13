@@ -45,7 +45,7 @@ def train_src(encoder, classifier, src_data_loader):
             loss.backward(inputs=optim_params)
             optimizer.step()
 
-            losses_within_epoch.extend([loss.item()] * len(y_true_batch)) # Michiel: let's assume len(y_true_batch) is equal to batch size
+            losses_within_epoch.extend([loss.item()] * len(y_true_batch)) # Let's assume len(y_true_batch) is equal to batch size. This allows for incomplete batches.
         
         losses_across_epochs.append(np.mean(np.array(losses_within_epoch)))
         
