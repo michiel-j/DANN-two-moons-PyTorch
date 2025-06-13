@@ -53,8 +53,6 @@ def main():
     # Create and initialise the encoder network and the classifier network (no discriminator yet)
     encoder = models.Encoder()
     classifier = models.Classifier()
-    encoder.apply(models.init_weights)
-    classifier.apply(models.init_weights)
 
     # Convert all data to torch.Tensor, such that device and dtype can be set. Next, create dataloaders for batching, shuffling, etc.
     Xs = torch.from_numpy(Xs).to(device='cpu', dtype=torch.float32)
@@ -103,10 +101,7 @@ def main():
     # Create and initialise discriminator (domain classifier)
     encoder = models.Encoder()
     classifier = models.Classifier()
-    encoder.apply(models.init_weights)
-    classifier.apply(models.init_weights)
     discriminator = models.Discriminator()
-    discriminator.apply(models.init_weights)
     
     print(f'Train encoder and classifier using unsupervised DANN for {params.num_epochs} epochs')
     encoder, classifier, discriminator = core.train_src_tgt(encoder, classifier, discriminator, Xs_loader_train, Xt_loader_train)

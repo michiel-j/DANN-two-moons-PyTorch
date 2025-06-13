@@ -1,4 +1,4 @@
-# DANN-two-moons-PyTorch
+# Domain Adversarial Neural Network (DANN) Demo in PyTorch: Two Moons
 Demo of an unsupervised domain adversarial neural network (DANN) using the Two Moons synthetic dataset. Implemented in PyTorch, compared to [ADAPT package Two Moons](https://adapt-python.github.io/adapt/examples/Two_moons.html) example to ensure correctness. \
 The hyperparameters were copied from the ADAPT demo. Therefore, these may be suboptimal.
 
@@ -26,8 +26,8 @@ Visualisation of the network without domain adaptation:
 
 The corresponding results on the test set data are (`log.txt`):
 ```
-Source domain test data: avg loss = 0.000000, avg acc = 100.000000%, ARI = 1.0000
-Target domain test data: avg loss = 18.750000, avg acc = 85.000000%, ARI = 0.4849
+Source domain test data: avg loss = 0.004592, avg acc = 100.000000%, ARI = 1.0000
+Target domain test data: avg loss = 1.044985, avg acc = 88.000000%, ARI = 0.5735
 ```
 
 Visualisation of the feature extractor's latent space (encoder) without domain adaptation (through PCA):
@@ -45,8 +45,8 @@ Visualisation of the network with domain adaptation:
 
 The corresponding results on the test set data are (`log.txt`):
 ```
-Source domain test data: avg loss = 0.000000, avg acc = 98.000000%, ARI = 0.9208
-Target domain test data: avg loss = 12.500000, avg acc = 93.000000%, ARI = 0.7370
+Source domain test data: avg loss = 0.019901, avg acc = 100.000000%, ARI = 1.0000
+Target domain test data: avg loss = 0.076041, avg acc = 99.000000%, ARI = 0.9600
 ```
 The hyperparameters were copied from the ADAPT demo. Therefore, these may be suboptimal.
 

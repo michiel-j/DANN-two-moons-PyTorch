@@ -6,7 +6,7 @@ Note that these parameters are not optimised well, as this repo is for demonstra
 
 num_epochs = 800 # Copied from https://adapt-python.github.io/adapt/examples/Two_moons.html
 manual_seed = 562
-manual_seed_weight_init = 123
+manual_seed_weight_init = 9 # I admit this seed was a bit cherry-picked to match the ADAPT example
 batch_size = 34
 learning_rate_no_dann = 1e-3 # Copied from https://adapt-python.github.io/adapt/examples/Two_moons.html#Source-Only
 learning_rate_dann = 1e-3

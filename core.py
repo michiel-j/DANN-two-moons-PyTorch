@@ -39,12 +39,13 @@ def train_src(encoder, classifier, src_data_loader):
 
             # Compute training loss
             loss = criterion(input=y_pred_batch.squeeze(), target=y_true_batch)
-            losses_within_epoch.append(loss.item())
 
             # Backpropagation
             optimizer.zero_grad()
             loss.backward(inputs=optim_params)
             optimizer.step()
+
+            losses_within_epoch.extend([loss.item()] * len(y_true_batch)) # Michiel: let's assume len(y_true_batch) is equal to batch size
         
         losses_across_epochs.append(np.mean(np.array(losses_within_epoch)))
         
@@ -79,14 +80,15 @@ def eval(encoder, classifier, data_loader, print_output: bool = True):
 
             # Predict source samples on classifier
             y_pred_batch = classifier(features).squeeze()
-            y_pred_batch = torch.where(y_pred_batch >= 0.5, 1, 0).to(dtype=torch.float32)
 
             # Compute training loss
             loss = criterion(input=y_pred_batch, target=y_true_batch)
-            losses.append(loss.item())
+            y_pred_batch = torch.where(y_pred_batch >= 0.5, 1, 0).to(dtype=torch.float32)
 
             true_labels.extend(y_true_batch.tolist())
             predicted_labels.extend(y_pred_batch.tolist())
+
+            losses.extend([loss.item()] * len(y_true_batch))
 
     if print_output:
         print(f"\t avg loss = {loss:.6f}, avg acc = {accuracy_score(y_true=true_labels, y_pred=predicted_labels):2%}, ARI = {adjusted_rand_score(labels_true=true_labels, labels_pred=predicted_labels):.4f}")
@@ -134,7 +136,6 @@ def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_
             features_src = encoder(X_batch_src) # Extract features using encoder network
             y_pred_batch = classifier(features_src) # Predict source samples on classifier
             classifier_loss = criterion_classifier(input=y_pred_batch.squeeze(), target=y_true_batch_src) # Compute classifier's training loss
-            classifier_losses_within_epoch.append(classifier_loss.item())
             discriminator_pred_src = discriminator(features_src) # Domain predictions
 
             # Target domain data
@@ -153,6 +154,8 @@ def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_
             discriminator_loss.backward(inputs=list(discriminator.parameters()), retain_graph=True)
             encoder_loss.backward(inputs=list(encoder.parameters()), retain_graph=True)
             optimizer.step()
+
+            classifier_losses_within_epoch.extend([classifier_loss.item()] * len(y_true_batch_src)) # Let's assume len(y_true_batch) is equal to batch size. This allows for incomplete batches.
         
         classifier_losses_across_epochs.append(np.mean(np.array(classifier_losses_within_epoch)))
         

@@ -30,6 +30,7 @@ class Encoder(torch.nn.Module):
         self.linear2 = torch.nn.Linear(10, 10, dtype=torch.float32)
         self.relu2 = torch.nn.ReLU()
         
+        # Initialise weights
         self.apply(init_weights)
         return
 
@@ -49,6 +50,8 @@ class Classifier(torch.nn.Module):
         # Copied from https://adapt-python.github.io/adapt/examples/Two_moons.html#Network
         self.linear1 = torch.nn.Linear(10, 1, dtype=torch.float32) # Copied from https://adapt-python.github.io/adapt/examples/Two_moons.html#Network
         self.sigmoid = torch.nn.Sigmoid()
+
+        # Initialise weights
         self.apply(init_weights)
         return
 
@@ -72,8 +75,10 @@ class Discriminator(torch.nn.Module):
         self.linear2 = torch.nn.Linear(10, 10, dtype=torch.float32)
         self.relu2 = torch.nn.ReLU()
         self.linear3 = torch.nn.Linear(10, 1, dtype=torch.float32)
-        self.apply(init_weights)
         self.sigmoid = torch.nn.Sigmoid()
+
+        # Initialise weights
+        self.apply(init_weights)
         return
 
 
