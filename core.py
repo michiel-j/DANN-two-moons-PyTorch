@@ -65,10 +65,10 @@ def eval(encoder, classifier, data_loader, print_output: bool = True):
     """
     Evaluate encoder and classifier using source domain data
     """
-    losses, true_labels, predicted_labels = [], [], []
-
     encoder.eval()
     classifier.eval()
+    
+    predictions, true_labels = [], [] # Let's use list because it is easiest to append to
 
     criterion = nn.BCELoss()
 
@@ -80,19 +80,18 @@ def eval(encoder, classifier, data_loader, print_output: bool = True):
 
             # Predict source samples on classifier
             y_pred_batch = classifier(features).squeeze()
+            predictions.extend(y_pred_batch.detach().cpu().tolist())
+            true_labels.extend(y_true_batch.detach().cpu().tolist())
 
-            # Compute training loss
-            loss = criterion(input=y_pred_batch, target=y_true_batch)
-            y_pred_batch = torch.where(y_pred_batch >= 0.5, 1, 0).to(dtype=torch.float32)
-
-            true_labels.extend(y_true_batch.tolist())
-            predicted_labels.extend(y_pred_batch.tolist())
-
-            losses.extend([loss.item()] * len(y_true_batch))
+        # Compute training loss
+        predictions = torch.from_numpy(np.array(predictions)).to(dtype=torch.float32) # List has to be converted to torch.Tensor for loss calculation
+        true_labels = torch.from_numpy(np.array(true_labels)).to(dtype=torch.float32)
+        loss = criterion(input=predictions, target=true_labels)
+        thresholded_predictions = torch.where(predictions >= 0.5, 1, 0).to(dtype=torch.float32)
 
     if print_output:
-        print(f"\t avg loss = {loss:.6f}, avg acc = {accuracy_score(y_true=true_labels, y_pred=predicted_labels):2%}, ARI = {adjusted_rand_score(labels_true=true_labels, labels_pred=predicted_labels):.4f}")
-    return predicted_labels, true_labels
+        print(f"\t avg loss = {loss:.6f}, avg acc = {accuracy_score(y_true=true_labels, y_pred=thresholded_predictions):2%}, ARI = {adjusted_rand_score(labels_true=true_labels, labels_pred=thresholded_predictions):.4f}")
+    return thresholded_predictions, true_labels
 
 
 def train_src_tgt(encoder, classifier, discriminator, src_data_loader, tgt_data_loader):
