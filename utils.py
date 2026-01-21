@@ -1,6 +1,8 @@
 from matplotlib import pyplot as plt
 from sklearn.datasets import make_moons
+from sklearn.decomposition import PCA
 import numpy as np
+import torch
 
 
 def plot_dataset(Xs, Xt, ys):
@@ -37,6 +39,51 @@ def plot_contour(Xs, Xt, ys, x_grid, y_grid, y_pred_grid):
     plt.legend()
     plt.tight_layout()
     return plt
+
+
+def plot_pca(encoder, src_data_loader, tgt_data_loader, file: str):
+    """
+    
+    """
+    encoder.eval()
+    features_src_list, features_tgt_list = [], []
+    labels_src_list = []
+
+    with torch.no_grad():
+        for idx, (X_batch, y_batch) in enumerate(src_data_loader):
+            # Extract features using encoder network
+            features_src = encoder(X_batch)
+            features_src_list.append(features_src.detach().cpu())
+            labels_src_list.append(y_batch.detach().cpu())
+
+        for idx, (X_batch, _) in enumerate(tgt_data_loader):
+            # Extract features using encoder network
+            features_tgt = encoder(X_batch)
+            features_tgt_list.append(features_tgt.detach().cpu())
+    
+    # Convert features from list to torch.Tensor by stacking
+    features_src = torch.cat(features_src_list, dim=0).numpy()
+    features_tgt = torch.cat(features_tgt_list, dim=0).numpy()
+    labels_src = torch.cat(labels_src_list, dim=0).numpy()
+
+    # Fit and transform the features using PCA
+    pca_transformer = PCA(n_components=2).fit(np.concatenate((features_src, features_tgt), axis=0))
+    features_src = pca_transformer.transform(features_src)
+    features_tgt = pca_transformer.transform(features_tgt)
+
+    # Plot the PCA
+    plt.figure()
+    plt.scatter(features_src[labels_src==0][:, 0], features_src[labels_src==0][:, 1], color='blue', s=3)
+    plt.scatter(features_src[labels_src==1][:, 0], features_src[labels_src==1][:, 1], color='orange', s=3)
+    plt.scatter(features_tgt[:, 0], features_tgt[:, 1], color='black', s=3)
+    plt.xlabel('Latent dim. 1')
+    plt.ylabel('Latent dim. 2')
+    plt.title(f"PCA of encoder's latent space. \n Expl. variance is {(pca_transformer.explained_variance_ratio_[0]*100):.2f}% (dim. 1) and {(pca_transformer.explained_variance_ratio_[1]*100):.2f}% (dim. 2).")
+    plt.legend(['source, 0', 'source, 1', 'target'])
+    plt.tight_layout()
+    plt.savefig(file)
+    plt.close()
+    return
 
 
 def make_moons_da(n_samples=100, rotation=30, noise=0.05, random_state=0):

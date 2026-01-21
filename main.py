@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-from torch.utils.data import TensorDataset, DataLoader
 import random
 
 import models
@@ -13,6 +12,16 @@ import params
 Demo copied from ADAPT package (TensorFlow only): https://adapt-python.github.io/adapt/examples/Two_moons.html
 
 Partly inspired by https://github.com/mashaan14/DANN-toy (file structure, plotting)
+
+There are two ways to run this unsupervised DANN:
+    - Approach 1:
+        Train encoder, classifier and discriminator from the start. Lambda then evolves from 0 to 1 as described in utils.get_lambda_value_domain_adaptation;
+    - Approach 2:
+        2.1: Train encoder and classifier;
+        2.2: Pre-train discriminator to have a good classification between source and target domain data;
+        2.3: Train entire DANN with a fixed lambda to get domain-invariant features.
+
+To run either approach 1 or 2, comment out the correct parts indicated with "approach 1" or "approach 2" (also in core.py).
 """
 
 def main():
@@ -67,11 +76,11 @@ def main():
     Xt_train, Xt_test = Xt[:100, :], Xt[100:, :]
     yt_train, yt_test = yt[:100], yt[100:]
 
-    Xs_loader_train = DataLoader(TensorDataset(Xs_train, ys_train), batch_size=params.batch_size, shuffle=True)
-    Xt_loader_train = DataLoader(TensorDataset(Xt_train, yt_train), batch_size=params.batch_size, shuffle=True)
-    Xs_loader_test = DataLoader(TensorDataset(Xs_test, ys_test), batch_size=params.batch_size, shuffle=False)
-    Xt_loader_test = DataLoader(TensorDataset(Xt_test, yt_test), batch_size=params.batch_size, shuffle=False)
-    X_loader_grid = DataLoader(TensorDataset(X_grid, torch.ones(X_grid.shape[0])), batch_size=params.batch_size, shuffle=False) # For contour plot. Ignore the labels (dummy var of -100), as these are necessary to iterate in core.eval function
+    Xs_loader_train = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(Xs_train, ys_train), batch_size=params.batch_size, shuffle=True)
+    Xt_loader_train = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(Xt_train, yt_train), batch_size=params.batch_size, shuffle=True)
+    Xs_loader_test = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(Xs_test, ys_test), batch_size=params.batch_size, shuffle=False)
+    Xt_loader_test = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(Xt_test, yt_test), batch_size=params.batch_size, shuffle=False)
+    X_loader_grid = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(X_grid, torch.ones(X_grid.shape[0])), batch_size=params.batch_size, shuffle=False) # For contour plot. Ignore the labels (dummy var of -100), as these are necessary to iterate in core.eval function
 
 
     #########################################################################################################
@@ -88,17 +97,17 @@ def main():
 
     # Create contour plot
     y_pred_grid, _ = core.eval(encoder, classifier, X_loader_grid, print_output=False) # print=False because this will give gibberish output
-    y_pred_grid = np.array(y_pred_grid).reshape(100, 100) # Reshape back from separate 2 coordinate points to mesh/grid
+    y_pred_grid = y_pred_grid.reshape(100, 100) # Reshape back from separate 2 coordinate points to mesh/grid
     plt = utils.plot_contour(Xs, Xt, ys, x_coord_grid, y_coord_grid, y_pred_grid)
     plt.savefig('./plots/contour_plot_no_domain_adaptation.png')
 
     # Plot encoder's latent space through PCA
-    core.pca_plots(encoder, Xs_loader_train, Xt_loader_train, './plots/pca_encoder_no-domain-adaptation.png')
+    utils.plot_pca(encoder, Xs_loader_train, Xt_loader_train, './plots/pca_encoder_no-domain-adaptation.png')
 
     #########################################################################################################
     #  Train encoder, classifier and discriminator using source and target domain data (unsupervised DANN)
     #########################################################################################################
-    # Create and initialise discriminator (domain classifier)
+    # Create new encoder, classifier and disriminator, and initialise them
     encoder = models.Encoder()
     classifier = models.Classifier()
     discriminator = models.Discriminator()
@@ -114,12 +123,12 @@ def main():
 
     # Create contour plot
     y_pred_grid, _ = core.eval(encoder, classifier, X_loader_grid, print_output=False) # print=False because this will give gibberish output
-    y_pred_grid = np.array(y_pred_grid).reshape(100, 100) # Reshape back from separate 2 coordinate points to mesh/grid
+    y_pred_grid = y_pred_grid.reshape(100, 100) # Reshape back from separate 2 coordinate points to mesh/grid
     plt = utils.plot_contour(Xs, Xt, ys, x_coord_grid, y_coord_grid, y_pred_grid)
     plt.savefig('./plots/contour_plot_with_domain_adaptation.png')
 
     # Plot encoder's latent space through PCA
-    core.pca_plots(encoder, Xs_loader_train, Xt_loader_train, './plots/pca_encoder_with-domain-adaptation.png')
+    utils.plot_pca(encoder, Xs_loader_train, Xt_loader_train, './plots/pca_encoder_with-domain-adaptation.png')
     
     return
 

@@ -5,6 +5,8 @@ Note that these parameters are not optimised well, as this repo is for demonstra
 """
 
 num_epochs = 800 # Copied from https://adapt-python.github.io/adapt/examples/Two_moons.html
+num_epochs_pretrain_discriminator_equal_norm = 800 # Only train discriminator. Do not train encoder nor classifier
+num_epochs_classifier_discriminator_encoder_equal_norm = 2000
 manual_seed = 562
 manual_seed_weight_init = 9 # I admit this seed was a bit cherry-picked to match the ADAPT example
 batch_size = 34

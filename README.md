@@ -15,7 +15,7 @@ Visualisation of the Two Moons training data:
 ## Model
 The encoder and classifier were copied from the [ADAPT example](https://adapt-python.github.io/adapt/examples/Two_moons.html#Network). The discriminator is ADAPT's default and was copied from the [ADAPT DANN docs](https://adapt-python.github.io/adapt/generated/adapt.feature_based.DANN.html). The definitions of encoder, classifier and discriminator can be found in `models.py`.
 
-## Results
+## Results Using `main.py`
 ### No domain adaptation
 First, only the encoder and the classifier are trained. No domain adaptation is applied.
 
@@ -53,6 +53,25 @@ The hyperparameters were copied from the ADAPT demo. Therefore, these may be sub
 Visualisation of the feature extractor's latent space (encoder) with domain adaptation (through PCA):
 <p align="center">
   <img width="500" src=./plots/pca_encoder_with-domain-adaptation.png>
+</p>
+
+## Results Using `main_equal_norm.py`
+In `main_equal_norm.py`, the hyperparameter $\lambda$ is replaced by a less sensitive hyperparameter ($=1.5$). Every new $\lambda$ value greater than 1.0 means "*prioritise domain-invariant features over classification performance*".
+
+Visualisation of the network with domain adaptation:
+<p align="center">
+  <img width="500" src=./plots/contour_plot_with_domain_adaptation_equal_norm.png>
+</p>
+
+The corresponding results on the test set data are (`log.txt`):
+```
+Source domain test data: avg loss = 0.117467, avg acc = 97.000000%, ARI = 0.8824
+Target domain test data: avg loss = 0.181755, avg acc = 96.000000%, ARI = 0.8449
+```
+
+Visualisation of the feature extractor's latent space (encoder) with domain adaptation (through PCA):
+<p align="center">
+  <img width="500" src=./plots/pca_encoder_with-domain-adaptation_equal_norm.png>
 </p>
 
 ## Reproducibility
